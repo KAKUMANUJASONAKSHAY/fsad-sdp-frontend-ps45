@@ -9,7 +9,15 @@ function MainNavbar() {
     <div className="public-shell">
       <header className="topbar">
         <Link to="/" className="brandmark">
-          <span className="brandmark-badge">SA</span>
+          <span className="brandmark-badge brandmark-logo" aria-hidden="true">
+            <span className="logo-ring">
+              <span className="logo-ribbon logo-ribbon-left" />
+              <span className="logo-ribbon logo-ribbon-right" />
+              <span className="logo-core">
+                <span className="logo-star">A</span>
+              </span>
+            </span>
+          </span>
           <span>
             <strong>Student Achievement Portal</strong>
             <small>Track, submit, and review academic milestones</small>
