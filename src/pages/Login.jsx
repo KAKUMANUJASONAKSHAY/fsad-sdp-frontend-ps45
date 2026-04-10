@@ -18,6 +18,10 @@ function Login() {
     setFormData((current) => ({ ...current, [name]: value }))
   }
 
+  const handleRoleSelect = (role) => {
+    setFormData((current) => ({ ...current, role }))
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
 
@@ -59,7 +63,7 @@ function Login() {
         <p className="eyebrow">Secure Access</p>
         <h2>Login</h2>
         <p className="section-lead">
-          Login with your student email or admin username, then choose the correct role.
+          Login with your student email or admin username, then pick your portal below.
         </p>
 
         {error && <p className="status-banner status-error">{error}</p>}
@@ -89,14 +93,25 @@ function Login() {
             />
           </label>
 
-          <label className="field">
+          <div className="field">
             <span>Role</span>
-            <select name="role" value={formData.role} onChange={handleChange} required>
-              <option value="">--select--</option>
-              <option value="STUDENT">Student</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-          </label>
+            <div className="role-toggle" role="group" aria-label="Select login role">
+              <button
+                type="button"
+                className={`role-chip ${formData.role === 'STUDENT' ? 'role-chip-active' : ''}`}
+                onClick={() => handleRoleSelect('STUDENT')}
+              >
+                Student
+              </button>
+              <button
+                type="button"
+                className={`role-chip ${formData.role === 'ADMIN' ? 'role-chip-active' : ''}`}
+                onClick={() => handleRoleSelect('ADMIN')}
+              >
+                Admin
+              </button>
+            </div>
+          </div>
 
           <button type="submit" className="btn btn-primary form-submit">
             Login

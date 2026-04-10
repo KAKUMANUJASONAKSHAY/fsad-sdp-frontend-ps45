@@ -523,6 +523,37 @@ a {
   color: var(--muted);
 }
 
+.role-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.role-chip {
+  padding: 13px 16px;
+  border: 1px solid rgba(92, 63, 44, 0.14);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--text);
+  font: inherit;
+  font-family: 'Trebuchet MS', 'Gill Sans', sans-serif;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.role-chip:hover {
+  border-color: rgba(184, 92, 56, 0.38);
+  background: rgba(184, 92, 56, 0.08);
+}
+
+.role-chip-active {
+  border-color: rgba(184, 92, 56, 0.58);
+  background: linear-gradient(135deg, rgba(184, 92, 56, 0.18), rgba(221, 143, 99, 0.14));
+  color: var(--primary-dark);
+  box-shadow: 0 0 0 4px rgba(184, 92, 56, 0.12);
+}
+
 .field-span-full,
 .form-submit {
   grid-column: 1 / -1;
@@ -696,6 +727,10 @@ a {
   }
 
   .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .role-toggle {
     grid-template-columns: 1fr;
   }
 
