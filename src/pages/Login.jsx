@@ -69,6 +69,26 @@ function Login() {
         {error && <p className="status-banner status-error">{error}</p>}
 
         <form onSubmit={handleSubmit} className="form-grid single-column">
+          <div className="field">
+            <span>Role</span>
+            <div className="role-toggle" role="group" aria-label="Select login role">
+              <button
+                type="button"
+                className={`role-chip ${formData.role === 'STUDENT' ? 'role-chip-active' : ''}`}
+                onClick={() => handleRoleSelect('STUDENT')}
+              >
+                Student
+              </button>
+              <button
+                type="button"
+                className={`role-chip ${formData.role === 'ADMIN' ? 'role-chip-active' : ''}`}
+                onClick={() => handleRoleSelect('ADMIN')}
+              >
+                Admin
+              </button>
+            </div>
+          </div>
+
           <label className="field">
             <span>User / Email</span>
             <input
@@ -92,26 +112,6 @@ function Login() {
               required
             />
           </label>
-
-          <div className="field">
-            <span>Role</span>
-            <div className="role-toggle" role="group" aria-label="Select login role">
-              <button
-                type="button"
-                className={`role-chip ${formData.role === 'STUDENT' ? 'role-chip-active' : ''}`}
-                onClick={() => handleRoleSelect('STUDENT')}
-              >
-                Student
-              </button>
-              <button
-                type="button"
-                className={`role-chip ${formData.role === 'ADMIN' ? 'role-chip-active' : ''}`}
-                onClick={() => handleRoleSelect('ADMIN')}
-              >
-                Admin
-              </button>
-            </div>
-          </div>
 
           <button type="submit" className="btn btn-primary form-submit">
             Login
