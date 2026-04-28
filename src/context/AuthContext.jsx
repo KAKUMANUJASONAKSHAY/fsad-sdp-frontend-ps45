@@ -9,6 +9,7 @@ const normalizeRole = (value) => {
 
   if (normalized === 'ADMIN') return 'admin'
   if (normalized === 'STUDENT') return 'student'
+  if (normalized === 'FACULTY') return 'faculty'
 
   return value.toString().trim().toLowerCase()
 }
@@ -49,6 +50,8 @@ export function AuthProvider({ children }) {
       sessionStorage.removeItem('loggedInAdmin')
     } else if (currentRole === 'student') {
       sessionStorage.removeItem('loggedInStudent')
+    } else if (currentRole === 'faculty') {
+      sessionStorage.removeItem('loggedInFaculty')
     }
 
     sessionStorage.removeItem('token')

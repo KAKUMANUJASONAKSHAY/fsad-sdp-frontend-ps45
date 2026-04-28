@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AdminNavbar from './admin/AdminNavbar'
 import { useAuth } from './context/AuthContext'
+import FacultyNavbar from './faculty/FacultyNavbar'
 import MainNavbar from './pages/MainNavbar'
 import UserNavbar from './user/UserNavbar'
 
@@ -31,6 +32,14 @@ function App() {
         element={
           <ProtectedRoute allowedRole="student">
             <UserNavbar />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faculty/*"
+        element={
+          <ProtectedRoute allowedRole="faculty">
+            <FacultyNavbar />
           </ProtectedRoute>
         }
       />

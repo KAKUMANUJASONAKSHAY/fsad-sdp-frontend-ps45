@@ -10,6 +10,7 @@ const clearAuthSession = () => {
   sessionStorage.removeItem('loggedInRole')
   sessionStorage.removeItem('loggedInAdmin')
   sessionStorage.removeItem('loggedInStudent')
+  sessionStorage.removeItem('loggedInFaculty')
 }
 
 axiosClient.interceptors.request.use(

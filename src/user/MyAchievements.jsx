@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import axiosClient from '../api/axiosClient'
+import AchievementFilesList from '../components/AchievementFilesList'
 
 function MyAchievements() {
   const [achievements, setAchievements] = useState([])
@@ -77,12 +78,22 @@ function MyAchievements() {
                   <dt>Student</dt>
                   <dd>{achievement.student?.name || '-'}</dd>
                 </div>
+                <div>
+                  <dt>Faculty Review</dt>
+                  <dd>{achievement.facultyStatus || 'PENDING'}</dd>
+                </div>
               </dl>
               <div className="achievement-actions">
-                {achievement.certificateUrl && (
-                  <a href={achievement.certificateUrl} target="_blank" rel="noreferrer">
-                    View certificate
-                  </a>
+                <div className="stacked-links">
+                  {achievement.certificateUrl && (
+                    <a href={achievement.certificateUrl} target="_blank" rel="noreferrer">
+                      View certificate URL
+                    </a>
+                  )}
+                  <AchievementFilesList achievementId={achievement.id} />
+                </div>
+                {achievement.facultyRemarks && (
+                  <span className="inline-meta">Faculty: {achievement.facultyRemarks}</span>
                 )}
               </div>
             </article>

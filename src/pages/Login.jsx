@@ -25,6 +25,11 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
+    if (!formData.role) {
+      setError('Select a role before logging in.')
+      return
+    }
+
     try {
       const response = await axiosClient.post('/auth/login', formData)
 
@@ -33,9 +38,15 @@ function Login() {
       if (role === 'ADMIN') {
         sessionStorage.setItem('loggedInAdmin', JSON.stringify(user))
         sessionStorage.removeItem('loggedInStudent')
+        sessionStorage.removeItem('loggedInFaculty')
+      } else if (role === 'FACULTY') {
+        sessionStorage.setItem('loggedInFaculty', JSON.stringify(user))
+        sessionStorage.removeItem('loggedInAdmin')
+        sessionStorage.removeItem('loggedInStudent')
       } else {
         sessionStorage.setItem('loggedInStudent', JSON.stringify(user))
         sessionStorage.removeItem('loggedInAdmin')
+        sessionStorage.removeItem('loggedInFaculty')
       }
 
       login({ token, role })
@@ -43,6 +54,8 @@ function Login() {
 
       if (role === 'ADMIN') {
         navigate('/admin/home')
+      } else if (role === 'FACULTY') {
+        navigate('/faculty/home')
       } else {
         navigate('/student/home')
       }
@@ -85,6 +98,13 @@ function Login() {
                 onClick={() => handleRoleSelect('ADMIN')}
               >
                 Admin
+              </button>
+              <button
+                type="button"
+                className={`role-chip ${formData.role === 'FACULTY' ? 'role-chip-active' : ''}`}
+                onClick={() => handleRoleSelect('FACULTY')}
+              >
+                Faculty
               </button>
             </div>
           </div>

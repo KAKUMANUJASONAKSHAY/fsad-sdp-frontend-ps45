@@ -12,6 +12,8 @@ const initialForm = {
 
 function AddAchievement() {
   const [formData, setFormData] = useState(initialForm)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInStudent') || '{}')
@@ -21,10 +23,26 @@ function AddAchievement() {
     setFormData((current) => ({ ...current, [name]: value }))
   }
 
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files?.[0] || null)
+  }
+
+  const findLatestAchievementId = async () => {
+    const response = await axiosClient.get(`/studentapi/viewmyachievements/${loggedInUser.id}`)
+    const achievements = Array.isArray(response.data) ? response.data : []
+
+    const latestAchievement = achievements
+      .filter((achievement) => achievement.title === formData.title)
+      .sort((first, second) => second.id - first.id)[0]
+
+    return latestAchievement?.id || null
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
 
     try {
+      setSubmitting(true)
       const response = await axiosClient.post('/studentapi/submitachievement', {
         ...formData,
         student: {
@@ -32,12 +50,38 @@ function AddAchievement() {
         },
       })
 
-      setMessage(response.data)
+      let statusMessage = typeof response.data === 'string' ? response.data : 'Achievement submitted successfully.'
+      let achievementId = response.data?.id || null
+
+      if (!achievementId && selectedFile) {
+        achievementId = await findLatestAchievementId()
+      }
+
+      if (selectedFile && achievementId) {
+        const fileData = new FormData()
+        fileData.append('file', selectedFile)
+
+        await axiosClient.post(`/files/upload?achievementId=${achievementId}`, fileData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+
+        statusMessage = `${statusMessage} File uploaded successfully.`
+      } else if (selectedFile && !achievementId) {
+        statusMessage = `${statusMessage} Achievement saved, but file upload could not be attached automatically.`
+      }
+
+      setMessage(statusMessage)
       setError('')
       setFormData(initialForm)
+      setSelectedFile(null)
+      event.target.reset()
     } catch {
       setMessage('')
       setError('Failed to submit achievement.')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -116,6 +160,11 @@ function AddAchievement() {
           />
         </label>
 
+        <label className="field">
+          <span>Proof File</span>
+          <input type="file" accept=".pdf,image/*" onChange={handleFileChange} />
+        </label>
+
         <label className="field field-span-full">
           <span>Description</span>
           <textarea
@@ -128,8 +177,8 @@ function AddAchievement() {
           />
         </label>
 
-        <button type="submit" className="btn btn-primary form-submit">
-          Submit Achievement
+        <button type="submit" className="btn btn-primary form-submit" disabled={submitting}>
+          {submitting ? 'Submitting...' : 'Submit Achievement'}
         </button>
       </form>
     </section>

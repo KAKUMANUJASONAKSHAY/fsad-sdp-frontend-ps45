@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import PageNotFound from '../pages/PageNotFound'
 import AddAchievement from './AddAchievement'
 import MyAchievements from './MyAchievements'
+import PaymentPage from './PaymentPage'
 import UserHome from './UserHome'
 import UserProfile from './UserProfile'
 
@@ -28,6 +29,7 @@ function UserNavbar() {
           <Link to="/student/profile">Profile</Link>
           <Link to="/student/add-achievement">Add Achievement</Link>
           <Link to="/student/my-achievements">My Achievements</Link>
+          <Link to="/student/payment">Payment</Link>
           <button type="button" onClick={handleLogout} className="sidebar-logout">
             Logout
           </button>
@@ -41,6 +43,7 @@ function UserNavbar() {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/add-achievement" element={<AddAchievement />} />
           <Route path="/my-achievements" element={<MyAchievements />} />
+          <Route path="/payment" element={<PaymentPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </main>

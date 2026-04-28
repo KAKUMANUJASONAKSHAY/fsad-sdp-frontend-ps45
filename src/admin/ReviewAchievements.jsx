@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import axiosClient from '../api/axiosClient'
+import AchievementFilesList from '../components/AchievementFilesList'
 
 function ReviewAchievements() {
   const [statusFilter, setStatusFilter] = useState('ALL')
@@ -93,8 +94,10 @@ function ReviewAchievements() {
                 <th>Level</th>
                 <th>Date</th>
                 <th>Status</th>
+                <th>Faculty Status</th>
+                <th>Faculty Remarks</th>
                 <th>Student</th>
-                <th>Certificate</th>
+                <th>Proof</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -112,15 +115,20 @@ function ReviewAchievements() {
                       {achievement.status}
                     </span>
                   </td>
+                  <td>{achievement.facultyStatus || 'PENDING'}</td>
+                  <td>{achievement.facultyRemarks || '-'}</td>
                   <td>{achievement.student?.name || '-'}</td>
                   <td>
-                    {achievement.certificateUrl ? (
-                      <a href={achievement.certificateUrl} target="_blank" rel="noreferrer">
-                        View
-                      </a>
-                    ) : (
-                      '-'
-                    )}
+                    <div className="stacked-links">
+                      {achievement.certificateUrl ? (
+                        <a href={achievement.certificateUrl} target="_blank" rel="noreferrer">
+                          View URL
+                        </a>
+                      ) : (
+                        <span className="inline-meta">No URL</span>
+                      )}
+                      <AchievementFilesList achievementId={achievement.id} />
+                    </div>
                   </td>
                   <td>
                     <div className="table-actions">

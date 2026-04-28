@@ -1,7 +1,9 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom'
 import Home from './Home'
+import FacultyRegistration from './FacultyRegistration'
 import Login from './Login'
 import PageNotFound from './PageNotFound'
+import Support from './Support'
 import UserRegistration from './UserRegistration'
 
 function MainNavbar() {
@@ -27,6 +29,8 @@ function MainNavbar() {
         <nav className="topnav">
           <Link to="/">Home</Link>
           <Link to="/student-registration">Student Registration</Link>
+          <Link to="/faculty-registration">Faculty Registration</Link>
+          <Link to="/support">Support</Link>
           <Link to="/login">Login</Link>
         </nav>
       </header>
@@ -34,9 +38,12 @@ function MainNavbar() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/student-registration" element={<UserRegistration />} />
+        <Route path="/faculty-registration" element={<FacultyRegistration />} />
+        <Route path="/support" element={<Support />} />
         <Route path="/login" element={<Login />} />
         <Route path="/student-login" element={<Navigate to="/login" replace />} />
         <Route path="/admin-login" element={<Navigate to="/login" replace />} />
+        <Route path="/faculty-login" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>

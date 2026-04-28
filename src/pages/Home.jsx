@@ -9,8 +9,8 @@ function Home() {
           <h1>Showcase student achievements with one clean workflow.</h1>
           <p className="hero-text">
             Students can register, maintain profiles, submit achievements, and
-            track approval status. Admins can review every record from a single
-            dashboard.
+            track approval status. Faculty can recommend department submissions,
+            and admins can finalize every record from a single dashboard.
           </p>
           <div className="hero-actions">
             <Link to="/student-registration" className="btn btn-primary">
@@ -32,8 +32,8 @@ function Home() {
             <strong>Submit events, activities, levels, proof links, and dates</strong>
           </div>
           <div className="stat-card accent-c">
-            <span>Review</span>
-            <strong>Approve or reject records through the admin dashboard</strong>
+            <span>Faculty Review</span>
+            <strong>Recommend or hold department records before admin moderation</strong>
           </div>
         </div>
       </section>
@@ -47,17 +47,17 @@ function Home() {
           </p>
         </article>
         <article className="feature-card">
-          <h3>Admin review tools</h3>
+          <h3>Faculty and admin review</h3>
           <p>
-            View all users, inspect every submitted achievement, and update each
-            record status without extra navigation complexity.
+            Faculty can inspect department-specific submissions, while admins retain
+            campus-wide visibility and moderation controls.
           </p>
         </article>
         <article className="feature-card">
           <h3>Built for your backend</h3>
           <p>
             The frontend is aligned to your current Spring Boot routes for
-            `auth`, `studentapi`, and `adminapi`.
+            `auth`, `studentapi`, `facultyapi`, `files`, `otp`, `mail`, and `payment`.
           </p>
         </article>
       </section>

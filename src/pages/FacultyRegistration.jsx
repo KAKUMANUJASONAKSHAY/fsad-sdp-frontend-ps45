@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import axiosClient from '../api/axiosClient'
 
 const initialForm = {
@@ -8,11 +8,10 @@ const initialForm = {
   password: '',
   contact: '',
   department: '',
-  rollNumber: '',
-  gender: '',
+  designation: '',
 }
 
-function UserRegistration() {
+function FacultyRegistration() {
   const [formData, setFormData] = useState(initialForm)
   const [otp, setOtp] = useState('')
   const [otpSent, setOtpSent] = useState(false)
@@ -21,6 +20,8 @@ function UserRegistration() {
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+
+  const emailReady = useMemo(() => /\S+@\S+\.\S+/.test(formData.email), [formData.email])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -34,19 +35,19 @@ function UserRegistration() {
   }
 
   const handleSendOtp = async () => {
-    if (!formData.email.trim()) {
+    if (!emailReady) {
       setMessage('')
-      setError('Enter your email before requesting OTP.')
+      setError('Enter a valid faculty email before sending OTP.')
       return
     }
 
     try {
       setOtpLoading(true)
       const response = await axiosClient.post('/otp/send', { email: formData.email })
-      setMessage(response.data)
-      setError('')
       setOtpSent(true)
       setOtpVerified(false)
+      setMessage(response.data)
+      setError('')
     } catch (err) {
       setMessage('')
       setError(typeof err.response?.data === 'string' ? err.response.data : 'Failed to send OTP.')
@@ -68,9 +69,9 @@ function UserRegistration() {
         email: formData.email,
         otp,
       })
+      setOtpVerified(true)
       setMessage(response.data)
       setError('')
-      setOtpVerified(true)
     } catch (err) {
       setMessage('')
       setError(typeof err.response?.data === 'string' ? err.response.data : 'OTP verification failed.')
@@ -84,14 +85,13 @@ function UserRegistration() {
 
     if (!otpVerified) {
       setMessage('')
-      setError('Verify OTP before completing student registration.')
+      setError('Verify OTP before completing faculty registration.')
       return
     }
 
     try {
       setSubmitting(true)
-      const response = await axiosClient.post('/studentapi/registration', formData)
-
+      const response = await axiosClient.post('/facultyapi/registration', formData)
       setMessage(response.data)
       setError('')
       setFormData(initialForm)
@@ -101,13 +101,11 @@ function UserRegistration() {
     } catch (err) {
       setMessage('')
       if (err.response?.data) {
-        setError(typeof err.response.data === 'string'
-          ? err.response.data
-          : 'Registration failed. Please verify your details and try again.')
+        setError(typeof err.response.data === 'string' ? err.response.data : 'Faculty registration failed.')
       } else if (err.request) {
         setError('Network error. Check whether the backend server is running.')
       } else {
-        setError('Registration failed. Please verify your details and try again.')
+        setError('Faculty registration failed.')
       }
     } finally {
       setSubmitting(false)
@@ -117,11 +115,10 @@ function UserRegistration() {
   return (
     <section className="auth-layout">
       <div className="auth-card auth-card-wide">
-        <p className="eyebrow">New Student Account</p>
-        <h2>Student Registration</h2>
+        <p className="eyebrow">Faculty Onboarding</p>
+        <h2>Faculty Registration</h2>
         <p className="section-lead">
-          Create an account using your student details to start recording
-          achievements.
+          Register department faculty accounts and verify the email before joining the review flow.
         </p>
 
         {message && <p className="status-banner status-success">{message}</p>}
@@ -130,14 +127,7 @@ function UserRegistration() {
         <form onSubmit={handleSubmit} className="form-grid">
           <label className="field">
             <span>Full Name</span>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter full name"
-              required
-            />
+            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
           </label>
 
           <div className="field">
@@ -148,13 +138,13 @@ function UserRegistration() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter email"
+                placeholder="Enter faculty email"
                 required
               />
               <button
                 type="button"
                 className="btn btn-secondary inline-btn"
-                disabled={otpLoading || !formData.email.trim()}
+                disabled={otpLoading || !emailReady}
                 onClick={handleSendOtp}
               >
                 {otpLoading && !otpSent ? 'Sending...' : 'Send OTP'}
@@ -170,7 +160,7 @@ function UserRegistration() {
                   type="text"
                   value={otp}
                   onChange={(event) => setOtp(event.target.value)}
-                  placeholder="Enter OTP"
+                  placeholder="Enter received OTP"
                   required
                 />
                 <button
@@ -187,81 +177,31 @@ function UserRegistration() {
 
           <label className="field">
             <span>Username</span>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Choose username"
-              required
-            />
+            <input type="text" name="username" value={formData.username} onChange={handleChange} required />
           </label>
 
           <label className="field">
             <span>Password</span>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Create password"
-              required
-            />
+            <input type="password" name="password" value={formData.password} onChange={handleChange} required />
           </label>
 
           <label className="field">
             <span>Contact</span>
-            <input
-              type="text"
-              name="contact"
-              value={formData.contact}
-              onChange={handleChange}
-              placeholder="Enter contact number"
-              required
-            />
+            <input type="text" name="contact" value={formData.contact} onChange={handleChange} required />
           </label>
 
           <label className="field">
             <span>Department</span>
-            <input
-              type="text"
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              placeholder="Enter department"
-              required
-            />
+            <input type="text" name="department" value={formData.department} onChange={handleChange} required />
           </label>
 
-          <label className="field">
-            <span>Roll Number</span>
-            <input
-              type="text"
-              name="rollNumber"
-              value={formData.rollNumber}
-              onChange={handleChange}
-              placeholder="Enter roll number"
-              required
-            />
-          </label>
-
-          <label className="field">
-            <span>Gender</span>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Others">Others</option>
-            </select>
+          <label className="field field-span-full">
+            <span>Designation</span>
+            <input type="text" name="designation" value={formData.designation} onChange={handleChange} required />
           </label>
 
           <button type="submit" className="btn btn-primary form-submit" disabled={submitting || !otpVerified}>
-            {submitting ? 'Registering...' : 'Register'}
+            {submitting ? 'Registering...' : 'Register Faculty'}
           </button>
         </form>
       </div>
@@ -269,4 +209,4 @@ function UserRegistration() {
   )
 }
 
-export default UserRegistration
+export default FacultyRegistration
