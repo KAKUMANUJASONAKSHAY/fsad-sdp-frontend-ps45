@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axiosClient from '../api/axiosClient'
 import AchievementFilesList from '../components/AchievementFilesList'
 
@@ -9,7 +9,7 @@ function ReviewAchievements() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const fetchAchievements = async () => {
+  const fetchAchievements = useCallback(async () => {
     const url =
       statusFilter === 'ALL'
         ? '/adminapi/viewallachievements'
@@ -33,11 +33,11 @@ function ReviewAchievements() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [statusFilter])
 
   useEffect(() => {
     fetchAchievements()
-  }, [statusFilter])
+  }, [fetchAchievements])
 
   const updateStatus = async (id, nextStatus) => {
     try {
@@ -84,7 +84,7 @@ function ReviewAchievements() {
 
       {!loading && achievements.length > 0 && (
         <div className="table-card">
-          <table className="data-table wide-table">
+          <table className="data-table wide-table review-table">
             <thead>
               <tr>
                 <th>ID</th>

@@ -50,7 +50,7 @@ function AddAchievement() {
         },
       })
 
-      let statusMessage = typeof response.data === 'string' ? response.data : 'Achievement submitted successfully.'
+      let statusMessage = 'Achievement submitted successfully. Waiting for approval.'
       let achievementId = response.data?.id || null
 
       if (!achievementId && selectedFile) {

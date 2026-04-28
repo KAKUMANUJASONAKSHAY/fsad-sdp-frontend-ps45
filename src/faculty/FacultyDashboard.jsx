@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import axiosClient from '../api/axiosClient'
 import AchievementFilesList from '../components/AchievementFilesList'
 
@@ -18,7 +18,7 @@ function FacultyDashboard() {
   const [loading, setLoading] = useState(true)
   const [reviewingId, setReviewingId] = useState(null)
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     if (!department) {
       setStudents([])
       setPendingAchievements([])
@@ -45,11 +45,11 @@ function FacultyDashboard() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [department])
 
   useEffect(() => {
     fetchDashboardData()
-  }, [department])
+  }, [fetchDashboardData])
 
   const handleReview = async (achievementId, facultyStatus) => {
     const facultyRemarks = (remarks[achievementId] || '').trim()
